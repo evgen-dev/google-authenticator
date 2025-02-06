@@ -1,0 +1,37 @@
+{
+    "name": "evgen-dev/google-authenticator",
+    "description": "Laravel/GoogleAuthenticator - generate and check OTP",
+    "authors": [
+        {
+            "name": "Christian Stocker aka chregu",
+            "homepage": "https://github.com/chregu/GoogleAuthenticator.php",
+            "role": "Developer"
+        },
+		
+		 {
+            "name": "Evgenii Devisok aka evgen_dev",
+            "email": "snikers9876@gmail.com"
+			"homepage": "https://github.com/evgen-dev",
+			"role": "Developer"
+        }
+    ],
+    "keywords": [
+        "laravel",
+        "otp",
+        "google authenticator"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2.0",
+        "illuminate/support": "^8.0 | ^9.0 | ^10.0"
+    },
+    "require-dev": {
+       
+    },
+    "autoload": {
+        "psr-0": {
+            "EvgenDev\\GoogleAuthenticator": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
