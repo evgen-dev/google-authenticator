@@ -24,5 +24,4 @@ GoogleAuthenticator::getCode('YOUR_SECRET_STRING');
 GoogleAuthenticator::checkCode('YOUR_SECRET_STRING', 'YOUR_CODE');
 GoogleAuthenticator::getQRCodeUrl('username', 'example.org', 'YOUR_SECRET_STRING');
 GoogleAuthenticator::generateSecret();
-
-```:
+```
