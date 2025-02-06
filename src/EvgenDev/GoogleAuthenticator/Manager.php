@@ -6,7 +6,7 @@ class Manager
 {
     protected GoogleAuthenticator $googleAuthenticator;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
         $this->googleAuthenticator = new GoogleAuthenticator();
     }

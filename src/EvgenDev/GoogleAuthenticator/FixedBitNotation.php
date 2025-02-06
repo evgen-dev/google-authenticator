@@ -24,7 +24,7 @@ class FixedBitNotation
     protected bool $_rightPadFinalBits;
     protected bool $_padFinalGroup;
     protected string $_padCharacter;
-    protected array $_charmap;
+    protected array $_charmap = [];
 
     /**
      * Constructor
@@ -103,7 +103,7 @@ class FixedBitNotation
         $padFinalGroup = $this->_padFinalGroup;
         $padCharacter = $this->_padCharacter;
 
-        // Generate encoded output; 
+        // Generate encoded output;
         // each loop produces one encoded character
         for ($c = 0; $c < $byteCount * 8 / $bitsPerCharacter; $c++) {
 
@@ -122,7 +122,7 @@ class FixedBitNotation
                     $encodedString .= $chars[$oldBits];
 
                     if ($padFinalGroup) {
-                        // Array of the lowest common multiples of 
+                        // Array of the lowest common multiples of
                         // $bitsPerCharacter and 8, divided by 8
                         $lcmMap = array(1 => 1, 2 => 1, 3 => 3, 4 => 1,
                             5 => 5, 6 => 3, 7 => 7, 8 => 1);
@@ -231,14 +231,14 @@ class FixedBitNotation
 
                 // Get the new bits ready
                 if ($bitsNeeded > $bitsPerCharacter) {
-                    // New bits aren't enough to complete a byte; shift them 
+                    // New bits aren't enough to complete a byte; shift them
                     // left into position
                     $newBits = $charmap[$encodedString[$c]] << $bitsNeeded
                         - $bitsPerCharacter;
                     $bitsWritten += $bitsPerCharacter;
 
                 } elseif ($c != $lastNotatedIndex || $rightPadFinalBits) {
-                    // Zero or more too many bits to complete a byte; 
+                    // Zero or more too many bits to complete a byte;
                     // shift right
                     $newBits = $charmap[$encodedString[$c]] >> $unusedBitCount;
                     $bitsWritten = 8; //$bitsWritten += $bitsNeeded;
