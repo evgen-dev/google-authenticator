@@ -30,4 +30,10 @@ class Manager
     {
         return $this->googleAuthenticator->generateSecret();
     }
+
+    public function setTimeType(string $type)
+    {
+        $this->googleAuthenticator->setTimeType($type);
+        return $this;
+    }
 }

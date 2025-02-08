@@ -18,7 +18,7 @@ Add the provider to `config/app.php`
 
 # Using
 ```php
-use EvgenDev\GoogleAuthenticator;
+use EvgenDev\GoogleAuthenticator\Facades\GoogleAuthenticator;
 
 GoogleAuthenticator::getCode('YOUR_SECRET_STRING');
 GoogleAuthenticator::checkCode('YOUR_SECRET_STRING', 'YOUR_CODE');

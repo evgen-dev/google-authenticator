@@ -9,12 +9,33 @@ class GoogleAuthenticator
     const PASS_CODE_LENGTH = 6;
     const SECRET_LENGTH = 10;
 
+    const NTP_SERVER_HOST = 'time.google.com';
+    const NTP_SERVER_PORT = '123';
+
+    const NTP_TIME = 'ntptime';
+    const LOCAL_TIME = 'localtime';
+
     protected float|int|object $pinModulo;
+    protected string $timeType = '';
 
 
-    public function __construct()
+    public function __construct(string $type = self::LOCAL_TIME)
     {
         $this->pinModulo = pow(10, static::PASS_CODE_LENGTH);
+        $this->setTimeType($type);
+    }
+
+    /**
+     * @param string $type
+     * @return $this
+     */
+    public function setTimeType(string $type){
+        if(!in_array($type, [self::LOCAL_TIME, self::NTP_TIME])){
+            throw new \InvalidArgumentException('Unsupported time type provided');
+        }
+
+        $this->timeType = $type;
+        return  $this;
     }
 
     /**
@@ -24,7 +45,7 @@ class GoogleAuthenticator
      */
     public function checkCode(string $secret, string $code): bool
     {
-        $time = floor(time() / 30);
+        $time = floor($this->time() / 30);
         for ($i = -1; $i <= 1; $i++) {
             if (hash_equals($this->getCode($secret, $time + $i), $code)) {
                 return true;
@@ -41,7 +62,7 @@ class GoogleAuthenticator
     public function getCode(string $secret, ?int $time = null): string
     {
         if (is_null($time)) {
-            $time = floor(time() / 30);
+            $time = floor($this->time() / 30);
         }
 
         $base32 = new FixedBitNotation(5, static::SECRET_CHARS, true, true);
@@ -88,6 +109,33 @@ class GoogleAuthenticator
         }
         $base32 = new FixedBitNotation(5, static::SECRET_CHARS, true, true);
         return $base32->encode($secret);
+    }
+
+    protected function googleNTPTime()
+    {
+        $socket = @fsockopen(
+            "udp://".static::NTP_SERVER_HOST,
+            static::NTP_SERVER_PORT,
+            $err_no,
+            $err_str,
+            1
+        );
+
+        if(!$socket) {
+            throw new \RuntimeException('Could not connect to NTP server');
+        }
+
+        fwrite($socket,chr(0x1b).str_repeat("\0",47));
+        $packetReceived=fread($socket,48);
+
+        return unpack('N',$packetReceived,40)[1]-2208988800;
+    }
+
+    protected function time(): int{
+        if($this->timeType == self::LOCAL_TIME){
+            return time();
+        }
+        return $this->googleNTPTime();
     }
 }
 
